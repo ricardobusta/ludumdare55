@@ -8,12 +8,14 @@ func _init() -> void:
     rooms[1] = ( Room.new()
         .set_name("Dark Cellar")
         .set_description("You stand in a dark room. Seems like a type of cellar. \
-There are drawings on the floor. But it's too dark to see.")
+There are drawings on the floor, and a lot of scattered objects. Something happened here. \
+The air smells like burnt candles and blood. Something serious happened in this place.")
     )
 
     rooms[2] = ( Room.new()
         .set_name("Tools Cabinet")
-        .set_description("Sample Description ")
+        .set_description("A small cabinet containing many tools. There's a small lamp \
+    that allows you to see the items contained in the room.")
     )
 
     rooms[3] = ( Room.new()
@@ -51,6 +53,10 @@ There are drawings on the floor. But it's too dark to see.")
     )
 
     make_passage("e", 1, 2)
+
+    make_passage("w", 1, 3)
+
+    make_passage("n", 1, 4)
 
 func make_passage(dir: String, from: int, to: int):
     match(dir):

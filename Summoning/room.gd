@@ -34,7 +34,7 @@ func set_exit_west(id: int) -> Room:
     return self
 
 func print_exits() -> String:
-    var text = "Exits:"
+    var text = "[color=#ff9933] Exits:[/color]"
     var has_exit = false;
     if(exit_north > 0):
         text += " North"
@@ -53,6 +53,6 @@ func print_exits() -> String:
     return text
 
 func print_complete() -> String:
-    var text = "[color=#f0f][b]%s[/b][/color]\n%s\n" % [name, description]
+    var text = "[color=#ff3300][b]%s[/b][/color]\n%s\n" % [name, description]
     text += print_exits()
     return text

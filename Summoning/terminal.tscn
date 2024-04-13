@@ -1,12 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cvxdc6djtlt3y"]
+[gd_scene load_steps=3 format=3 uid="uid://cvxdc6djtlt3y"]
 
 [ext_resource type="Script" path="res://game_control.gd" id="1_akcal"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cxaa7"]
-bg_color = Color(0.105882, 0.105882, 0.105882, 1)
-
-[sub_resource type="Theme" id="Theme_yaj5w"]
-RichTextLabel/styles/normal = SubResource("StyleBoxFlat_cxaa7")
+[ext_resource type="Theme" uid="uid://cubys7atjtuwu" path="res://terminal.tres" id="2_vibat"]
 
 [node name="Node" type="Node"]
 script = ExtResource("1_akcal")
@@ -26,16 +21,19 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_vibat")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Control/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme = SubResource("Theme_yaj5w")
 bbcode_enabled = true
 text = "[b]The Room[/b]
 There is some description of the room you are in.
-SOmething something
-[b]Exits:[/b] N E S W"
+Something something
+[i]Testing italic[/i]
+[b][i]Testing bold italic[/i][/b]
+[b]Exits:[/b] N E S W
+[code]test code[/code]"
 scroll_following = true
 
 [node name="LineEdit" type="LineEdit" parent="Control/VBoxContainer"]

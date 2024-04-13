@@ -7,23 +7,32 @@ var room_config: RoomConfig = RoomConfig.new()
 
 var current_room: int = 1
 
+var started: bool = false
+
 func _ready() -> void:
     input_field.grab_focus()
     input_field.text_submitted.connect(_on_text_submitted)
     text_field.clear()
 
-    _print_text("The Summoner - Text based adventure by Ricardo Bustamante <ricardo@busta.dev>")
-    _print_text("Ludum Dare 55 - 13.04.24\n\n\n")
+    _print_text("[color=#ff0099][code]
+ _____  _           _____
+|_   _|| |_  ___   |   __| _ _  _____  _____  ___  ___  ___  ___
+  | |  |   || -_|  |__   || | ||     ||     || . ||   || -_||  _|
+  |_|  |_|_||___|  |_____||___||_|_|_||_|_|_||___||_|_||___||_|
+[/code]\n
+Text based adventure by Ricardo Bustamante <ricardo@busta.dev>[/color]")
+    _print_text("Ludum Dare 55 - 13.04.24\n\n")
 
-    _print_text(_room().print_complete())
+    _print_text("Type anything to start")
 
 func _on_text_submitted(text: String) -> void:
     input_field.clear()
     text = text.strip_edges(true, true).to_lower()
     if(text.is_empty()):
         return;
-    _print_text("\n[color=#999]> " + text + "[/color]")
+    text_field.append_text("[color=#999]%s[/color]\n" % text)
     _parse_command(text)
+    text_field.append_text("\n[color=#999]> [/color]")
 
 func _print_text(text: String) -> void:
     text_field.append_text(text + "\n")
@@ -31,15 +40,25 @@ func _print_text(text: String) -> void:
 func _parse_command(command: String) -> void:
     var res = command.split(" ", false)
 
+    if(!started):
+        text_field.clear()
+        _print_text("[color=#ffff00]You wake up in a dark room. \
+Your eyes start getting used to the darkness. You feel like \
+exploring and trying to understand where you are, and maybe \
+you will figure out how did you end up here.[/color]\n\n")
+        _print_text(_room().print_complete())
+        started = true
+        return
+
     match res[0]:
-        "look", "l":
+        "look", "l", "ls":
             _handle_look("" if res.size() < 2 else res[1])
-        "move", "m":
+        "move", "m", "mv":
             _handle_move("" if res.size() < 2 else res[1])
         "clear", "cls", "cl", "c":
             text_field.clear()
             _print_text(_room().print_complete())
-        "help":
+        "help", "h":
             _print_text("Some things I could try:\nLook\tMove\tHelp")
         _:
             _print_text("I am not sure how to `[i]%s[/i]`. Maybe I need to ask for `[i]help[/i]`." % res[0])
@@ -66,13 +85,13 @@ func _handle_look(target: String):
 
 func _parse_direction(direction: String) -> String:
     match(direction):
-        "north", "n":
+        "north", "nort", "nor", "no", "n":
             return "north"
-        "south", "s":
+        "south", "sout", "sou", "so", "s":
             return "south"
-        "east", "e":
+        "east", "eas", "ea", "e":
             return "east"
-        "west", "w":
+        "west", "wes", "we", "w":
             return "west"
         _:
             return direction
@@ -88,7 +107,9 @@ func _handle_move(target: String) -> void:
             _print_text("There's no room to the %s." % target)
         else:
             _print_text("You move %s." % target)
-            _print_text(_room_at_direction(target).print_complete())
+            current_room = target_room
+            _print_text(_room().print_complete())
+
 
 func _room() -> Room:
     return room_config.rooms[current_room]
