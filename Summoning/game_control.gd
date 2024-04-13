@@ -12,6 +12,9 @@ func _ready() -> void:
     input_field.text_submitted.connect(_on_text_submitted)
     text_field.clear()
 
+    _print_text("The Summoner - Text based adventure by Ricardo Bustamante <ricardo@busta.dev>")
+    _print_text("Ludum Dare 55 - 13.04.24\n\n\n")
+
     _print_text(_room().print_complete())
 
 func _on_text_submitted(text: String) -> void:
@@ -46,41 +49,65 @@ func _handle_look(target: String):
         _print_text("You look at your surroundings")
         _print_text(_room().print_complete())
     else:
+        target = _parse_direction(target)
         match target:
-            "north", "n", "south", "s", "east", "e", "west", "w":
-                _print_text("You look at the next room:")
-                _print_text(_room_at_direction(target).print_complete())
+            "north", "south", "east", "west":
+                var room = _room_at_direction(target)
+                if(room != null):
+                    _print_text("You look at the next room to the %s:" % target)
+                    _print_text(room.print_complete())
+                else:
+                    _print_text("There's no exit at that direction...")
             "directions", "exits", "exit":
                 _print_text("You look at the available exits")
                 _print_text(_room().print_exits())
             _:
                 _print_text("There's no %s to be looked at..." % target)
 
-func _handle_move(target: String):
+func _parse_direction(direction: String) -> String:
+    match(direction):
+        "north", "n":
+            return "north"
+        "south", "s":
+            return "south"
+        "east", "e":
+            return "east"
+        "west", "w":
+            return "west"
+        _:
+            return direction
+
+func _handle_move(target: String) -> void:
     if(target.is_empty()):
         _print_text("I must move torwards a direction...")
         _print_text(_room().print_complete())
     else:
-        match(target):
-            "north":
-                _print_text("You are moving north")
-            _:
-                _print_text("There's no exit available to %s." % target)
+        target = _parse_direction(target)
+        var target_room = _room_id_at_direction(target)
+        if(target_room < 1):
+            _print_text("There's no room to the %s." % target)
+        else:
+            _print_text("You move %s." % target)
+            _print_text(_room_at_direction(target).print_complete())
 
 func _room() -> Room:
     return room_config.rooms[current_room]
 
-func _room_at_direction(direction: String) -> Room:
+func _room_id_at_direction(direction: String) -> int:
     var room = 0
     match(direction):
-        "north", "n":
+        "north":
             room = _room().exit_north
-        "south", "s":
+        "south":
             room = _room().exit_south
-        "east", "e":
+        "east":
             room = _room().exit_east
-        "west", "w":
+        "west":
             room = _room().exit_west
         _:
             room = 0
+    return room
+
+func _room_at_direction(direction: String) -> Room:
+    var room = _room_id_at_direction(direction)
     return null if room < 1 else room_config.rooms[room]
