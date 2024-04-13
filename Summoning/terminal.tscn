@@ -1,6 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://cvxdc6djtlt3y"]
+[gd_scene load_steps=4 format=3 uid="uid://cvxdc6djtlt3y"]
 
 [ext_resource type="Script" path="res://game_control.gd" id="1_akcal"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cxaa7"]
+bg_color = Color(0.105882, 0.105882, 0.105882, 1)
+
+[sub_resource type="Theme" id="Theme_yaj5w"]
+RichTextLabel/styles/normal = SubResource("StyleBoxFlat_cxaa7")
 
 [node name="Node" type="Node"]
 script = ExtResource("1_akcal")
@@ -24,38 +30,12 @@ grow_vertical = 2
 [node name="RichTextLabel" type="RichTextLabel" parent="Control/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = SubResource("Theme_yaj5w")
 bbcode_enabled = true
 text = "[b]The Room[/b]
 There is some description of the room you are in.
 SOmething something
-[b]Exits:[/b] N E S W
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-more
-
-"
+[b]Exits:[/b] N E S W"
 scroll_following = true
 
 [node name="LineEdit" type="LineEdit" parent="Control/VBoxContainer"]
