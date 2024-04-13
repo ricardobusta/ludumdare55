@@ -24,8 +24,8 @@ func set_exits(north: int = 0, south: int = 0, east: int = 0, west: int = 0) -> 
     self.exit_west = west
     return self
 
-func printable() -> String:
-    var text = "[color=#f0f][b]%s[/b][/color]\n%s\nExits" % [name, description]
+func print_exits() -> String:
+    var text = "Exits:"
     var has_exit = false;
     if(exit_north > 0):
         text += " N"
@@ -38,7 +38,12 @@ func printable() -> String:
         has_exit = true
     if(exit_west > 0):
         text += " W"
+        has_exit = true
     if(!has_exit):
         text += "None"
+    return text
 
-    return text + "\n"
+func print_complete() -> String:
+    var text = "[color=#f0f][b]%s[/b][/color]\n%s\n" % [name, description]
+    text += print_exits()
+    return text
