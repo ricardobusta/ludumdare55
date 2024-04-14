@@ -46,40 +46,48 @@ func _parse_command(command: String) -> void:
 Your eyes start getting used to the darkness. You feel like \
 exploring and trying to understand where you are, and maybe \
 you will figure out how did you end up here.[/color]\n\n")
-        _print_text(_room().print_complete())
+        _print_text(_room().print_complete(room_config))
         started = true
         return
 
     match res[0]:
         "look", "l", "ls":
-            _handle_look("" if res.size() < 2 else res[1])
+            _handle_look(_safe_get_param_1(res))
         "move", "m", "mv":
-            _handle_move("" if res.size() < 2 else res[1])
+            _handle_move(_safe_get_param_1(res))
         "clear", "cls", "cl", "c":
             text_field.clear()
-            _print_text(_room().print_complete())
+            _print_text(_room().print_complete(room_config))
+        "open", "o":
+            _handle_open(_safe_get_param_1(res))
         "help", "h":
-            _print_text("Some things I could try:\nLook\tMove\tHelp")
+            _print_text("Some things I could try:\nLook\tMove\tHelp\tClear\tOpen")
         _:
             _print_text("I am not sure how to `[i]%s[/i]`. Maybe I need to ask for `[i]help[/i]`." % res[0])
+
+func _safe_get_param_1(res: Array) -> String:
+    return "" if res.size() < 2 else _parse_direction(res[1])
 
 func _handle_look(target: String):
     if(target.is_empty()):
         _print_text("You look at your surroundings")
-        _print_text(_room().print_complete())
+        _print_text(_room().print_complete(room_config))
     else:
-        target = _parse_direction(target)
         match target:
             "north", "south", "east", "west":
                 var room = _room_at_direction(target)
                 if(room != null):
-                    _print_text("You look at the next room to the %s:" % target)
-                    _print_text(room.print_complete())
+                    var door_id = _door_id_at_direction(target)
+                    if(door_id > 0 && room_config.doors[door_id].closed):
+                        _print_text("You see %s to the %s." % [room_config.doors[door_id].description, target])
+                    else:
+                        _print_text("You look at the next room to the %s:" % target)
+                        _print_text(room.print_complete(room_config))
                 else:
                     _print_text("There's no exit at that direction...")
             "directions", "exits", "exit":
                 _print_text("You look at the available exits")
-                _print_text(_room().print_exits())
+                _print_text(_room().print_exits(room_config))
             _:
                 _print_text("There's no %s to be looked at..." % target)
 
@@ -96,20 +104,45 @@ func _parse_direction(direction: String) -> String:
         _:
             return direction
 
+func _door_id_at_direction(direction: String) -> int:
+    match(direction):
+        "north":
+            return _room().door_north
+        "south":
+            return _room().door_south
+        "east":
+            return _room().door_east
+        "west":
+            return _room().door_west
+        _:
+            return 0
+
 func _handle_move(target: String) -> void:
     if(target.is_empty()):
         _print_text("I must move torwards a direction...")
-        _print_text(_room().print_complete())
+        _print_text(_room().print_complete(room_config))
     else:
-        target = _parse_direction(target)
         var target_room = _room_id_at_direction(target)
         if(target_room < 1):
             _print_text("There's no room to the %s." % target)
         else:
-            _print_text("You move %s." % target)
-            current_room = target_room
-            _print_text(_room().print_complete())
+            var door_id = _door_id_at_direction(target)
+            if(door_id > 0 && room_config.doors[door_id].closed):
+                _print_text("The %s to the %s is closed, blocking your way." % [room_config.doors[door_id].description, target])
+            else:
+                _print_text("You move %s." % target)
+                current_room = target_room
+                _print_text(_room().print_complete(room_config))
 
+func _handle_open(target: String):
+    if(target.is_empty()):
+        _print_text("Open what?")
+        return
+    match(target):
+        "north", "south", "east", "west":
+            _print_text("Open direction %s" % target)
+        _:
+            _print_text("Open %s" % target)
 
 func _room() -> Room:
     return room_config.rooms[current_room]

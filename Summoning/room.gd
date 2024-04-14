@@ -4,10 +4,14 @@ class_name Room
 
 var name: String = "Room Name"
 var description: String = "Lorem ipsum dolor sit amet."
-var exit_north: int = -1
-var exit_south: int = -1
-var exit_east: int = -1
-var exit_west: int = -1
+var exit_north: int = 0
+var door_north: int = 0
+var exit_south: int = 0
+var door_south: int = 0
+var exit_east: int = 0
+var door_east: int = 0
+var exit_west: int = 0
+var door_west: int = 0
 
 func set_name(room_name: String) -> Room:
     self.name = room_name
@@ -17,42 +21,54 @@ func set_description(room_description: String) -> Room:
     self.description = room_description
     return self
 
-func set_exit_north(id: int) -> Room:
+func set_exit_north(id: int, door: int) -> Room:
     self.exit_north = id
+    self.door_north = door
     return self
 
-func set_exit_south(id: int) -> Room:
+func set_exit_south(id: int, door: int) -> Room:
     self.exit_south = id
+    self.door_south = door
     return self
 
-func set_exit_east(id: int) -> Room:
+func set_exit_east(id: int, door: int) -> Room:
     self.exit_east = id
+    self.door_east = door
     return self
 
-func set_exit_west(id: int) -> Room:
+func set_exit_west(id: int, door: int) -> Room:
     self.exit_west = id
+    self.door_west = door
     return self
 
-func print_exits() -> String:
-    var text = "[color=#ff9933] Exits:[/color]"
+func print_exits(room_config: RoomConfig) -> String:
+    var text = "[color=#ff9933]Exits:[/color]"
     var has_exit = false;
+    var doors = room_config.doors
     if(exit_north > 0):
-        text += " North"
+        text += get_dir_text("North", door_north, doors)
         has_exit = true
     if(exit_east > 0):
-        text += " East"
+        text += get_dir_text("East", door_east, doors)
         has_exit = true
     if(exit_south > 0):
-        text += " South"
+        text += get_dir_text("South", door_south, doors)
         has_exit = true
     if(exit_west > 0):
-        text += " West"
+        text += get_dir_text("West", door_west, doors)
         has_exit = true
     if(!has_exit):
         text += " None"
     return text
 
-func print_complete() -> String:
-    var text = "[color=#ff3300][b]%s[/b][/color]\n%s\n" % [name, description]
-    text += print_exits()
+func get_dir_text(dir: String, door: int, doors: Dictionary) -> String:
+    if(door > 0):
+        return "[color=%s] %s[/color]" % ["#f00" if doors[door].closed else "#0f0", dir]
+    else:
+        return " %s" % dir
+
+
+func print_complete(room_config: RoomConfig) -> String:
+    var text = "[color=#ff3300][b]%s[/b][/color]\n    %s\n" % [name, description]
+    text += print_exits(room_config)
     return text
