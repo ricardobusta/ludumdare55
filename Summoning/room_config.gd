@@ -10,7 +10,9 @@ func _init() -> void:
         .set_name("Dark Cellar")
         .set_description("You stand in a dark room. Seems like a type of cellar. \
 There are drawings on the floor, and a lot of scattered objects. Something happened here. \
-The air smells like burnt candles and blood. Something serious happened in this place.")
+The air smells like burnt candles and blood. Something serious happened in this place.
+    You can see a small wardrobe to the west. To the east, there's a door leading to another \
+room. To the northern direction, stairs lead to the floor above.")
     )
 
     rooms[2] = ( Room.new()
@@ -54,13 +56,15 @@ The air smells like burnt candles and blood. Something serious happened in this 
         .set_description("Sample Description ")
     )
 
-    doors[1] = ( Door.new("a wooden cabinetwoo door", true, "") )
+    doors[1] = ( Door.new("a wooden door", true, "") )
 
-    make_passage("e", 1, 2, 1)
+    doors[2] = ( Door.new("a small wardrobe", true, "") )
 
-    make_passage("w", 1, 3, 0)
+    make_passage("e", 1, 2, 1) # workshop
 
-    make_passage("n", 1, 4, 0)
+    make_passage("w", 1, 3, 2) # wardrobe
+
+    make_passage("u", 1, 4, 0)
 
 func make_passage(dir: String, from: int, to: int, door: int):
     match(dir):
@@ -76,3 +80,9 @@ func make_passage(dir: String, from: int, to: int, door: int):
         "w":
             rooms[from].set_exit_west(to, door)
             rooms[to].set_exit_east(from, door)
+        "u":
+            rooms[from].set_exit_up(to, door)
+            rooms[to].set_exit_down(from, door)
+        "d":
+            rooms[from].set_exit_down(to, door)
+            rooms[to].set_exit_up(from, door)

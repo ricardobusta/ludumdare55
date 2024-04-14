@@ -12,6 +12,10 @@ var exit_east: int = 0
 var door_east: int = 0
 var exit_west: int = 0
 var door_west: int = 0
+var exit_up: int = 0
+var door_up: int = 0
+var exit_down: int = 0
+var door_down: int = 0
 
 func set_name(room_name: String) -> Room:
     self.name = room_name
@@ -41,6 +45,16 @@ func set_exit_west(id: int, door: int) -> Room:
     self.door_west = door
     return self
 
+func set_exit_up(id: int, door: int) -> Room:
+    self.exit_up = id
+    self.door_up = door
+    return self
+
+func set_exit_down(id: int, door: int) -> Room:
+    self.exit_down = id
+    self.door_down = door
+    return self
+
 func print_exits(room_config: RoomConfig) -> String:
     var text = "[color=#ff9933]Exits:[/color]"
     var has_exit = false;
@@ -57,6 +71,12 @@ func print_exits(room_config: RoomConfig) -> String:
     if(exit_west > 0):
         text += get_dir_text("West", door_west, doors)
         has_exit = true
+    if(exit_up > 0):
+        text += get_dir_text("Up", door_up, doors)
+        has_exit = true
+    if(exit_down > 0):
+        text += get_dir_text("Down", door_down, doors)
+        has_exit = true
     if(!has_exit):
         text += " None"
     return text
@@ -66,7 +86,6 @@ func get_dir_text(dir: String, door: int, doors: Dictionary) -> String:
         return "[color=%s] %s[/color]" % ["#f00" if doors[door].closed else "#0f0", dir]
     else:
         return " %s" % dir
-
 
 func print_complete(room_config: RoomConfig) -> String:
     var text = "[color=#ff3300][b]%s[/b][/color]\n    %s\n" % [name, description]

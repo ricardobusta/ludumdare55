@@ -101,6 +101,10 @@ func _parse_direction(direction: String) -> String:
             return "east"
         "west", "wes", "we", "w":
             return "west"
+        "up", "u":
+            return "up"
+        "down", "dow", "do", "d":
+            return "down"
         _:
             return direction
 
@@ -114,6 +118,10 @@ func _door_id_at_direction(direction: String) -> int:
             return _room().door_east
         "west":
             return _room().door_west
+        "up":
+            return _room().door_up
+        "down":
+            return _room().door_down
         _:
             return 0
 
@@ -139,10 +147,18 @@ func _handle_open(target: String):
         _print_text("Open what?")
         return
     match(target):
-        "north", "south", "east", "west":
-            _print_text("Open direction %s" % target)
+        "north", "south", "east", "west", "up", "down":
+            var door_id = _door_id_at_direction(target)
+            if(door_id > 0):
+                if(room_config.doors[door_id].closed):
+                    room_config.doors[door_id].closed = false
+                    _print_text("Door to the %s was opened." % target)
+                else:
+                    _print_text("Door to the %s was already open." % target)
+            else:
+                _print_text("There's nothing to open at %s direction." % target)
         _:
-            _print_text("Open %s" % target)
+            _print_text("Open %s." % target)
 
 func _room() -> Room:
     return room_config.rooms[current_room]
@@ -158,6 +174,10 @@ func _room_id_at_direction(direction: String) -> int:
             room = _room().exit_east
         "west":
             room = _room().exit_west
+        "up":
+            room = _room().exit_up
+        "down":
+            room = _room().exit_down
         _:
             room = 0
     return room
