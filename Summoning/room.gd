@@ -16,6 +16,7 @@ var exit_up: int = 0
 var door_up: int = 0
 var exit_down: int = 0
 var door_down: int = 0
+var objects: Array = []
 
 func set_name(room_name: String) -> Room:
     self.name = room_name
@@ -53,6 +54,10 @@ func set_exit_up(id: int, door: int) -> Room:
 func set_exit_down(id: int, door: int) -> Room:
     self.exit_down = id
     self.door_down = door
+    return self
+
+func add_object(object: GameObject) -> Room:
+    self.objects.push_back(object)
     return self
 
 func print_exits(room_config: RoomConfig) -> String:

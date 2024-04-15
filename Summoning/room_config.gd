@@ -28,16 +28,16 @@ room. To the northern direction, stairs lead to the floor above.")
     )
 
     rooms[4] = ( Room.new()
-        .set_name("Living Room")
-        .set_description("Sample Description ")
+        .set_name("Main Hall")
+        .set_description("A big hall")
     )
     rooms[5] = ( Room.new()
-        .set_name("Living Room")
+        .set_name("Entrance Hall")
         .set_description("Sample Description ")
     )
 
     rooms[6] = ( Room.new()
-        .set_name("Living Room")
+        .set_name("Dinning Room")
         .set_description("Sample Description ")
     )
 
@@ -47,12 +47,12 @@ room. To the northern direction, stairs lead to the floor above.")
     )
 
     rooms[8] = ( Room.new()
-        .set_name("Living Room")
+        .set_name("Kitchen")
         .set_description("Sample Description ")
     )
 
     rooms[9] = ( Room.new()
-        .set_name("Living Room")
+        .set_name("Garage")
         .set_description("Sample Description ")
     )
 
@@ -61,10 +61,11 @@ room. To the northern direction, stairs lead to the floor above.")
     doors[2] = ( Door.new("a small wardrobe", true, "") )
 
     make_passage("e", 1, 2, 1) # workshop
-
     make_passage("w", 1, 3, 2) # wardrobe
-
-    make_passage("u", 1, 4, 0)
+    make_passage("u", 1, 4, 0) # up to main hall
+    make_passage("s", 4, 5, 0) # Main to entrance hall
+    make_passage("n", 4, 6, 0) # Main to dinning hall
+    make_passage("e", 6, 8, 0) # Dinning to kitchen
 
 func make_passage(dir: String, from: int, to: int, door: int):
     match(dir):
